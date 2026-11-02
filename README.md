@@ -21,21 +21,18 @@ Quest 版 Beat Saber（1.37.0）用の OctantPath の MOD（OctantPath for Quest
 | `proxy/` | PC で動くプロキシ。ネットにつながない Quest の代わりに BeatSaver を https で引く（Python 3 の標準ライブラリだけ） |
 | `spikes/` | 試作。本線は依存しない。公開の写しには含めない |
 
-いまできること: メインメニューの「OctantPath」で、OctantCompass とペアリングし、接続の状態を見る。選曲画面の上に出る板（取っ手でつかんで動かせる）の左の一覧で手札を押して推薦を受け取り、右のカバー付きの一覧で見る（曲の情報は PC のプロキシ越しに BeatSaver から）。右の行を押すと、導入済みの曲は選曲画面で選び、未導入の曲は PC のプロキシ越しに取って hash を確かめてから SongCore の曲の置き場所に入れる（取っているあいだにプレイを始めたら、展開と SongCore の読み直しはメニューに戻ってから）。入れた曲は所有の記録に書き、起動するたびに、期限と合計の上限に沿って、遊んでいないものを片付ける（既定は試し運転）。
+いまできること:
 
-## 組み合わせる版
+- メインメニューの「OctantPath」で、OctantCompass とペアリングし、接続の状態を見る
+- 選曲画面の上に出る板（取っ手でつかんで動かせる）の左の一覧で手札を押して推薦を受け取り、右のカバー付きの一覧で見る（曲の情報は PC のプロキシ越しに BeatSaver から）
+- 右の行を押すと、導入済みの曲は選曲画面で選び、未導入の曲は PC のプロキシ越しに取って hash を確かめてから SongCore の曲の置き場所に入れる（取っているあいだにプレイを始めたら、展開と SongCore の読み直しはメニューに戻ってから）
+- 入れた曲は所有の記録に書き、起動するたびに、期限と合計の上限に沿って、遊んでいないものを片付ける（既定は試し運転）
 
-支えるのは、各部品の最新の版どうしの組み合わせだけである（[decisions.md の全体と段階](https://github.com/BeatOctant/OctantSpecs/blob/main/decisions.md#全体と段階)、2026-10-22）。この README を書いた時点の相手は次のとおり。
+## 開発
 
-| 相手 | 版 | つなぐもの |
-| --- | --- | --- |
-| Beat Saber（Quest） | 1.37.0 | 依存の MOD（beatsaber-hook、BSML、SongCore など。`mod/qpm.json`） |
-| OctantCompass | 最新 | [契約3（OctantPath ↔ OctantCompass）](https://github.com/BeatOctant/OctantSpecs/blob/main/contracts/mod-api.md) 2.0、[契約6（つなぐ側 ↔ OctantCompass）](https://github.com/BeatOctant/OctantSpecs/blob/main/contracts/launch.md) 2.0 |
-| OctantSpecs | `OCTANTSPECS_REF`（`main`） | コアのテストが読む契約3 の例 |
+BeatOctant の部品は、どれも最新の版どうしで使う。依存の MOD（beatsaber-hook、BSML、SongCore など）は `mod/qpm.json` にある。コアのテストは `OCTANTSPECS_REF` の版の OctantSpecs から契約3 の例を読む。
 
-このリポジトリにはまだ版のタグがない。
-
-## コアのテスト
+### コアのテスト
 
 ```bash
 scripts/fetch-octantspecs.sh   # OCTANTSPECS_REF の版の OctantSpecs（契約3 の例）を .octantspecs/ に取る
@@ -44,11 +41,11 @@ cmake --build build/core
 build/core/octantpath-core-tests
 ```
 
-## MOD のビルド
+### MOD のビルド
 
 ビルドと Quest への置き方は [mod/README.md](mod/README.md) にある。
 
-## CI
+### CI
 
 プルリクエストと main への push で、コアのテスト、プロキシのテスト、MOD のビルドを回す。手で起動したとき（workflow_dispatch）は、MOD の `.so` と `.qmod` を実行結果の Artifacts から 3 日のあいだ取れる。`v` で始まるタグを打つと、3 つが通ったあとで `.so` と `.qmod` を入れた GitHub Release の下書きができる。
 
